@@ -12,7 +12,7 @@ namespace SoftwareAPIWebApp.Models
         [Key]
         public int TypeId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Поле не повинно бути порожнім")]
         [Display(Name = "Тип")]
         public string Name { get; set; }
 
