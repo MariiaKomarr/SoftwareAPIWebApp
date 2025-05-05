@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoftwareAPIWebApp.Models;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace SoftwareAPIWebApp.Controllers
 {
@@ -95,6 +96,38 @@ namespace SoftwareAPIWebApp.Controllers
         private bool FacultyExists(int id)
         {
             return _context.Faculties.Any(e => e.FacultyId == id);
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PatchFaculty(int id, [FromBody] JsonPatchDocument<Faculty> patchDoc)
+        {
+            if (patchDoc == null)
+                return BadRequest();
+
+            var faculty = _context.Faculties.FirstOrDefault(f => f.FacultyId == id);
+            if (faculty == null)
+                return NotFound();
+
+            patchDoc.ApplyTo(faculty, error =>
+            {
+                ModelState.AddModelError(error.Operation?.path ?? "", error.ErrorMessage);
+
+            });
+
+            if (!ModelState.IsValid)
+                return ValidationProblem(ModelState);
+
+            TryValidateModel(faculty); 
+
+            _context.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpOptions]
+        public IActionResult GetOptions()
+        {
+            Response.Headers.Add("Allow", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
+            return Ok();
         }
     }
 }

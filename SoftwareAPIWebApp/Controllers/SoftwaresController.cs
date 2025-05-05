@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoftwareAPIWebApp.Models;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace SoftwareAPIWebApp.Controllers
 {
@@ -39,6 +40,8 @@ namespace SoftwareAPIWebApp.Controllers
         {
             _context.Softwares.Add(software);
             await _context.SaveChangesAsync();
+
+            _context.Entry(software).Reference(s => s.Type).Load();
 
             return CreatedAtAction(nameof(GetSoftware), new { id = software.SoftwareId }, software);
         }
@@ -85,6 +88,37 @@ namespace SoftwareAPIWebApp.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PatchSoftware(int id, [FromBody] JsonPatchDocument<Software> patchDoc)
+        {
+            if (patchDoc == null)
+                return BadRequest();
+
+            var software = _context.Softwares.FirstOrDefault(s => s.SoftwareId == id);
+            if (software == null)
+                return NotFound();
+
+            patchDoc.ApplyTo(software, error =>
+            {
+                ModelState.AddModelError(error.Operation?.path ?? "", error.ErrorMessage);
+
+            });
+            TryValidateModel(software);
+
+            if (!ModelState.IsValid)
+                return ValidationProblem(ModelState);
+
+            _context.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpOptions]
+        public IActionResult GetOptions()
+        {
+            Response.Headers.Add("Allow", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
+            return Ok();
         }
     }
 }

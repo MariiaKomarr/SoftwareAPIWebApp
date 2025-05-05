@@ -18,7 +18,7 @@ namespace SoftwareAPIWebApp.Models
         public string Version { get; set; }
 
         public int TypeId { get; set; }
-        public virtual SoftwareType Type { get; set; }
+        public virtual SoftwareType? Type { get; set; }
 
         public string Author { get; set; }
 

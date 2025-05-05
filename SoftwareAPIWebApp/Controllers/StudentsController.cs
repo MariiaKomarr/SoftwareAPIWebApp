@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoftwareAPIWebApp.Models;
+using Microsoft.AspNetCore.JsonPatch;
+using NuGet.Protocol.Plugins;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace SoftwareAPIWebApp.Controllers
 {
@@ -39,6 +42,8 @@ namespace SoftwareAPIWebApp.Controllers
         {
             _context.Students.Add(student);
             await _context.SaveChangesAsync();
+
+            _context.Entry(student).Reference(s => s.Faculty).Load();
 
             return CreatedAtAction(nameof(GetStudent), new { id = student.StudentId }, student);
         }
@@ -86,5 +91,48 @@ namespace SoftwareAPIWebApp.Controllers
 
             return NoContent();
         }
+
+        [HttpPatch("{id}")]
+        public IActionResult PatchStudent(int id, [FromBody] JsonPatchDocument<Student> patchDoc)
+        {
+            if (patchDoc == null)
+                return BadRequest();
+
+            var student = _context.Students.FirstOrDefault(s => s.StudentId == id);
+            if (student == null)
+                return NotFound();
+
+
+            patchDoc.ApplyTo(student, error =>
+            {
+                ModelState.AddModelError(error.Operation?.path ?? "", error.ErrorMessage);
+
+            });
+
+
+            TryValidateModel(student);
+            if (!ModelState.IsValid)
+                return ValidationProblem(ModelState);
+
+            _context.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpOptions("{id}")]
+        public IActionResult GetStudentOptions(int id)
+        {
+            Response.Headers.Add("Allow", "GET,PUT,PATCH,DELETE,OPTIONS");
+            return Ok();
+        }
+
+        [HttpOptions]
+        public IActionResult GetOptions()
+        {
+            Response.Headers.Add("Allow", "GET,POST,OPTIONS");
+            return Ok();
+        }
+
+
+
     }
 }

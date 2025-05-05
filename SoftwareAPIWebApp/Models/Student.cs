@@ -19,7 +19,7 @@ namespace SoftwareAPIWebApp.Models
         public string Email { get; set; }
 
         public int FacultyId { get; set; }
-        public virtual Faculty Faculty { get; set; }
+        public virtual Faculty? Faculty { get; set; }
 
         public virtual ICollection<Installation> Installations { get; set; }
     }

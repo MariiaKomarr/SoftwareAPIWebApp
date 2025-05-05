@@ -3,7 +3,13 @@ using SoftwareAPIWebApp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddRazorPages();
+builder.Services
+    .AddControllers()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 
 builder.Services.AddDbContext<SoftwareAPIContext>(options =>
     options.UseSqlServer(

@@ -10,9 +10,9 @@ namespace SoftwareAPIWebApp.Models
         public DateTime InstallDate { get; set; }
 
         public int StudentId { get; set; }
-        public virtual Student Student { get; set; }
+        public virtual Student? Student { get; set; }
 
         public int SoftwareId { get; set; }
-        public virtual Software Software { get; set; }
+        public virtual Software? Software { get; set; }
     }
 }
