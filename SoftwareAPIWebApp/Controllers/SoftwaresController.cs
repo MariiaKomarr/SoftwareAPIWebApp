@@ -120,5 +120,26 @@ namespace SoftwareAPIWebApp.Controllers
             Response.Headers.Add("Allow", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
             return Ok();
         }
+
+        [HttpGet("html")]
+        public IActionResult GetHtmlPage()
+        {
+            var html = @"
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Software Library</title>
+        <link rel='stylesheet' href='/css/site.css' />
+    </head>
+    <body>
+        <h1>Software Library</h1>
+        <p>Сторінка з прикладом стилів.</p>
+    </body>
+    </html>";
+
+            return Content(html, "text/html");
+        }
+
     }
 }

@@ -26,9 +26,16 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseDefaultFiles(new DefaultFilesOptions
+{
+    DefaultFileNames = new List<string> { "softwares.html" }
+});
 app.UseStaticFiles();
 
+
 app.UseRouting();
+
 
 app.UseEndpoints(endpoints =>
 {
@@ -37,6 +44,6 @@ app.UseEndpoints(endpoints =>
 
 app.UseAuthorization();
 
-app.MapRazorPages();
+//app.MapRazorPages();
 
 app.Run();

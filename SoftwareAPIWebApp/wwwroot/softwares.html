@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Software Library</title>
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+
+<nav>
+    <a href="softwares.html">Softwares</a>
+    <a href="students.html">Students</a>
+    <a href="installations.html">Installations</a>
+    <a href="softwaretypes.html">Software Types</a>
+</nav>
+    <h1>Software Library</h1>
+
+    <h3>Add Software</h3>
+    <form id="addForm" action="javascript:void(0);" method="POST" onsubmit="addSoftware()">
+        <input type="text" id="add-name" placeholder="Name" required>
+        <input type="text" id="add-version" placeholder="Version" required>
+        <input type="number" id="add-typeId" placeholder="Type ID" required>
+        <input type="text" id="add-author" placeholder="Author" required>
+        <input type="text" id="add-usageTerms" placeholder="Usage Terms" required>
+        <input type="datetime-local" id="add-dateAdded" placeholder="Date Added" required>
+        <input type="text" id="add-annotation" placeholder="Annotation" required>
+        <input type="submit" value="Add">
+    </form>
+
+    <div id="editForm" style="display:none;">
+        <h3>Edit Software</h3>
+        <form action="javascript:void(0);" onsubmit="updateSoftware()">
+            <input type="hidden" id="edit-id">
+            <input type="text" id="edit-name" required>
+            <input type="text" id="edit-version" required>
+            <input type="number" id="edit-typeId" required>
+            <input type="text" id="edit-author" required>
+            <input type="text" id="edit-usageTerms" required>
+            <input type="datetime-local" id="edit-dateAdded" required>
+            <input type="text" id="edit-annotation" required>
+            <input type="submit" value="Save">
+            <a onclick="closeInput()" aria-label="Close">&#10006;</a>
+        </form>
+    </div>
+
+    <p id="counter"></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Version</th>
+                <th>Type ID</th>
+                <th>Author</th>
+                <th>Date Added</th>
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="softwares"></tbody>
+    </table>
+
+    <script src="js/softwares.js"></script>
+    <script type="text/javascript">
+        getSoftwares();
+    </script>
+</body>
+</html>
+

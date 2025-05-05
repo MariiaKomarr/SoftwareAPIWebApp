@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Installations</title>
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+<nav>
+    <a href="softwares.html">Softwares</a>
+    <a href="students.html">Students</a>
+    <a href="installations.html">Installations</a>
+    <a href="softwaretypes.html">Software Types</a>
+</nav>
+
+<h1>Installations</h1>
+<div id="installations-section">
+    <form onsubmit="addInstallation(); return false;">
+        <input type="number" id="add-studentId" placeholder="Student ID" required>
+        <input type="number" id="add-softwareId" placeholder="Software ID" required>
+        <input type="datetime-local" id="add-date" required>
+        <input type="submit" value="Add">
+    </form>
+
+    <div id="editForm" style="display:none;">
+        <h3>Edit Installation</h3>
+        <form onsubmit="updateInstallation(); return false;">
+            <input type="hidden" id="edit-id">
+            <input type="number" id="edit-studentId" required>
+            <input type="number" id="edit-softwareId" required>
+            <input type="datetime-local" id="edit-date" required>
+            <input type="submit" value="Save">
+            <a onclick="closeInput()" aria-label="Close">&#10006;</a>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Student</th>
+            <th>Software</th>
+            <th>Date</th>
+            <th colspan="2">Actions</th>
+        </tr>
+        </thead>
+        <tbody id="installations"></tbody>
+    </table>
+</div>
+
+<script src="/js/installations.js"></script>
+<script>
+        getInstallations();
+    </script>
+</body>
+</html>
