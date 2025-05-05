@@ -1,5 +1,5 @@
 ﻿const softwareUri = '/api/softwares';
-
+let softwares = [];
 function getSoftwares() {
     fetch(softwareUri)
         .then(response => response.json())
@@ -97,7 +97,38 @@ function displaySoftwares(data) {
         deleteBtn.textContent = 'Delete';
         deleteBtn.onclick = () => deleteSoftware(s.softwareId);
 
+        let installButton = document.createElement('button');
+        installButton.textContent = 'Install';
+        installButton.onclick = () => installSoftware(software.softwareId);
+
         row.insertCell(5).appendChild(editBtn);
         row.insertCell(6).appendChild(deleteBtn);
+        row.insertCell(7).appendChild(installButton);
     });
+}
+
+function installSoftware(id) {
+    const studentId = document.getElementById('student-select').value;
+    const installData = {
+        softwareId: id,
+        studentId: parseInt(studentId),
+        installDate: new Date().toISOString()
+    };
+
+    fetch('/api/installations', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(installData)
+    })
+        .then(response => {
+            if (response.ok) {
+                alert('Software installed');
+            } else {
+                alert('Installation failed');
+            }
+        })
+        .catch(error => console.error('Installation error:', error));
 }

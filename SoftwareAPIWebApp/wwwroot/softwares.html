@@ -3,33 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>Software Library</title>
-    <link rel="stylesheet" href="/css/site.css" />
+    <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
+    <nav>
+        <a href="softwares.html">Softwares</a>
+        <a href="students.html">Students</a>
+        <a href="installations.html">Installations</a>
+        <a href="softwaretypes.html">Software Types</a>
+    </nav>
 
-<nav>
-    <a href="softwares.html">Softwares</a>
-    <a href="students.html">Students</a>
-    <a href="installations.html">Installations</a>
-    <a href="softwaretypes.html">Software Types</a>
-</nav>
     <h1>Software Library</h1>
 
-    <h3>Add Software</h3>
-    <form id="addForm" action="javascript:void(0);" method="POST" onsubmit="addSoftware()">
-        <input type="text" id="add-name" placeholder="Name" required>
-        <input type="text" id="add-version" placeholder="Version" required>
-        <input type="number" id="add-typeId" placeholder="Type ID" required>
-        <input type="text" id="add-author" placeholder="Author" required>
-        <input type="text" id="add-usageTerms" placeholder="Usage Terms" required>
-        <input type="datetime-local" id="add-dateAdded" placeholder="Date Added" required>
-        <input type="text" id="add-annotation" placeholder="Annotation" required>
-        <input type="submit" value="Add">
-    </form>
+    <section class="form-section">
+        <h3>Add Software</h3>
+        <form onsubmit="addSoftware(); return false;">
+            <input type="text" id="add-name" placeholder="Name" required>
+            <input type="text" id="add-version" placeholder="Version" required>
+            <input type="number" id="add-typeId" placeholder="Type ID" required>
+            <input type="text" id="add-author" placeholder="Author" required>
+            <input type="text" id="add-usageTerms" placeholder="Usage Terms" required>
+            <input type="datetime-local" id="add-dateAdded" required>
+            <input type="text" id="add-annotation" placeholder="Annotation" required>
+            <button type="submit" class="btn btn-success">Add</button>
+        </form>
+    </section>
+
+    <section class="form-section">
+        <h3>Select Student</h3>
+        <select id="student-select"></select>
+    </section>
+
+    <section class="table-section">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Version</th>
+                    <th>Type ID</th>
+                    <th>Author</th>
+                    <th>Date Added</th>
+                    <th colspan="4">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="softwares"></tbody>
+        </table>
+    </section>
 
     <div id="editForm" style="display:none;">
         <h3>Edit Software</h3>
-        <form action="javascript:void(0);" onsubmit="updateSoftware()">
+        <form onsubmit="updateSoftware(); return false;">
             <input type="hidden" id="edit-id">
             <input type="text" id="edit-name" required>
             <input type="text" id="edit-version" required>
@@ -38,31 +61,68 @@
             <input type="text" id="edit-usageTerms" required>
             <input type="datetime-local" id="edit-dateAdded" required>
             <input type="text" id="edit-annotation" required>
-            <input type="submit" value="Save">
-            <a onclick="closeInput()" aria-label="Close">&#10006;</a>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" onclick="closeInput()" class="btn btn-secondary">Cancel</button>
         </form>
     </div>
 
-    <p id="counter"></p>
+    <div id="notification" style="display:none;" class="notification"></div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Version</th>
-                <th>Type ID</th>
-                <th>Author</th>
-                <th>Date Added</th>
-                <th colspan="2">Actions</th>
-            </tr>
-        </thead>
-        <tbody id="softwares"></tbody>
-    </table>
+    <script src="/js/softwares.js"></script>
+    <script>
+        function showNotification(message, isSuccess = true) {
+            const box = document.getElementById('notification');
+            box.textContent = message;
+            box.style.display = 'block';
+            box.style.backgroundColor = isSuccess ? '#d4edda' : '#f8d7da';
+            box.style.color = isSuccess ? '#155724' : '#721c24';
+            setTimeout(() => box.style.display = 'none', 3000);
+        }
 
-    <script src="js/softwares.js"></script>
-    <script type="text/javascript">
+        function installSoftware(id) {
+            const studentId = document.getElementById('student-select').value;
+            if (!studentId) {
+                showNotification('Please select a student first.', false);
+                return;
+            }
+
+            const installData = {
+                softwareId: id,
+                studentId: parseInt(studentId),
+                installDate: new Date().toISOString()
+            };
+
+            fetch('/api/installations', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(installData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        showNotification('Software installed successfully');
+                    } else {
+                        showNotification('Installation failed', false);
+                    }
+                })
+                .catch(error => showNotification('Installation error: ' + error, false));
+        }
+
+        fetch('/api/students')
+            .then(response => response.json())
+            .then(students => {
+                const select = document.getElementById('student-select');
+                students.forEach(s => {
+                    const option = document.createElement('option');
+                    option.value = s.id;
+                    option.textContent = s.name;
+                    select.appendChild(option);
+                });
+            });
+
         getSoftwares();
     </script>
 </body>
 </html>
-
