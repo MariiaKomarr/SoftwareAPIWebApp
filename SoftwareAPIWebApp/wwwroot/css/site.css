@@ -1,97 +1,165 @@
+﻿/* 🌌 Фон сторінки */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f4;
+    background-image: url('/images/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #f8f9fa; /* глобальний світлий текст */
+}
+
+/* 🧱 Секції */
+.form-section,
+.table-section,
+#editForm {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 16px;
     padding: 20px;
+    margin: 30px 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-h1, h3 {
-    color: #333;
+/* 🏷️ Заголовки */
+h1 {
+    color: #fff;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+    margin-left: 30px;
 }
 
+h2, h3, label {
+    color: #fff;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+}
+
+
+/* 🧭 Меню */
 nav {
-    background-color: #333;
-    padding: 10px;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 12px 20px;
+    border-radius: 0 0 12px 12px;
     margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
 }
 
     nav a {
-        color: #fff;
+        color: white;
         text-decoration: none;
-        margin-right: 20px;
-        font-weight: bold;
+        font-weight: 500;
     }
 
         nav a:hover {
             text-decoration: underline;
         }
 
-form {
-    margin-bottom: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+/* 📋 Таблиця */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    margin-top: 10px;
 }
 
-    form input[type="text"],
-    form input[type="email"],
-    form input[type="number"],
-    form input[type="datetime-local"] {
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        flex: 1;
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #444;
+    color: #f8f9fa; /* світлий текст */
+}
+
+th {
+    background-color: #007bff;
+    text-align: left;
+}
+
+    th:first-child {
+        border-top-left-radius: 12px;
     }
 
-    form input[type="submit"] {
-        background-color: #28a745;
-        color: white;
-        padding: 8px 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
+    th:last-child {
+        border-top-right-radius: 12px;
     }
 
-        form input[type="submit"]:hover {
-            background-color: #218838;
-        }
-
+/* ✏️ Кнопки */
 button {
-    padding: 6px 12px;
+    padding: 6px 14px;
     border: none;
-    border-radius: 4px;
-    margin: 2px;
+    border-radius: 6px;
+    font-weight: 500;
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
     button:hover {
-        opacity: 0.8;
+        opacity: 0.9;
     }
 
-    button:first-of-type {
+    button.btn-primary {
         background-color: #007bff;
         color: white;
     }
 
-    button:last-of-type {
+    button.btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    button.btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    button.btn-danger,
+    button.btn-delete {
         background-color: #dc3545;
         color: white;
     }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
+/* 🧾 Інпути */
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"],
+input[type="email"] {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #000;
+    padding: 8px;
+    margin: 5px;
+    width: 180px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
 }
 
-    table th,
-    table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
+/* 📢 Сповіщення */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    z-index: 1000;
+}
+
+/* 📱 Адаптація */
+@media (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
     }
 
-    table th {
-        background-color: #007bff;
-        color: white;
+    thead {
+        display: none;
     }
+
+    td {
+        position: relative;
+        padding-left: 50%;
+    }
+
+        td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+}

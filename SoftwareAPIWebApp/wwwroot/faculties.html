@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Faculties</title>
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+<nav>
+    <a href="softwares.html">Softwares</a>
+    <a href="students.html">Students</a>
+    <a href="installations.html">Installations</a>
+    <a href="softwaretypes.html">Software Types</a>
+    <a href="faculties.html">Faculties</a>
+</nav>
+
+<h1>Faculties</h1>
+
+<section class="form-section">
+    <form onsubmit="addFaculty(); return false;">
+        <input type="text" id="add-name" placeholder="Faculty Name" required>
+        <input type="text" id="add-dean" placeholder="Dean Name" required>
+        <input type="submit" value="Add" class="btn btn-success">
+    </form>
+
+    <div id="editForm" style="display:none;">
+        <h3>Edit Faculty</h3>
+        <form onsubmit="updateFaculty(); return false;">
+            <input type="hidden" id="edit-id">
+            <input type="text" id="edit-name" required>
+            <input type="text" id="edit-dean" required>
+            <input type="submit" value="Save" class="btn btn-primary">
+            <button type="button" onclick="closeInput()" class="btn btn-secondary">Cancel</button>
+        </form>
+    </div>
+</section>
+
+<section class="table-section">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Dean</th>
+            <th colspan="2">Actions</th>
+        </tr>
+        </thead>
+        <tbody id="faculties"></tbody>
+    </table>
+</section>
+
+<script src="/js/faculties.js"></script>
+<script>
+    getFaculties();
+</script>
+</body>
+</html>

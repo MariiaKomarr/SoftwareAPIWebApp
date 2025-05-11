@@ -11,39 +11,40 @@
         <a href="students.html">Students</a>
         <a href="installations.html">Installations</a>
         <a href="softwaretypes.html">Software Types</a>
+        <a href="faculties.html">Faculties</a>
     </nav>
 
     <h1>Software Library</h1>
 
-    <section class="form-section">
-        <h3>Add Software</h3>
-        <form onsubmit="addSoftware(); return false;">
-            <input type="text" id="add-name" placeholder="Name" required>
-            <input type="text" id="add-version" placeholder="Version" required>
-            <input type="number" id="add-typeId" placeholder="Type ID" required>
-            <input type="text" id="add-author" placeholder="Author" required>
-            <input type="text" id="add-usageTerms" placeholder="Usage Terms" required>
-            <input type="datetime-local" id="add-dateAdded" required>
-            <input type="text" id="add-annotation" placeholder="Annotation" required>
-            <button type="submit" class="btn btn-success">Add</button>
-        </form>
-    </section>
+<section class="form-section">
+    <h3>Add Software</h3>
+    <form onsubmit="addSoftware(); return false;">
+        <input type="text" id="add-name" placeholder="Name" required>
+        <input type="text" id="add-version" placeholder="Version" required>
+        <input type="number" id="add-typeId" placeholder="Type ID" required>
+        <input type="text" id="add-author" placeholder="Author" required>
+        <input type="text" id="add-usageTerms" placeholder="Usage Terms" required>
+        <input type="datetime-local" id="add-dateAdded" required>
+        <input type="text" id="add-annotation" placeholder="Annotation" required>
+        <button type="submit" class="btn btn-success">Add</button>
+    </form>
 
-    <section class="form-section">
-        <h3>Select Student</h3>
-        <select id="student-select"></select>
-    </section>
+   
+    <div id="error-messages" style="color: #ff6b6b; margin-top: 10px;"></div>
+</section>
+
 
     <section class="table-section">
         <table>
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Name</th>
                     <th>Version</th>
                     <th>Type ID</th>
                     <th>Author</th>
                     <th>Date Added</th>
-                    <th colspan="4">Actions</th>
+                    <th colspan="2">Actions</th>
                 </tr>
             </thead>
             <tbody id="softwares"></tbody>

@@ -38,6 +38,11 @@ namespace SoftwareAPIWebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<Software>> PostSoftware(Software software)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             _context.Softwares.Add(software);
             await _context.SaveChangesAsync();
 
@@ -45,6 +50,7 @@ namespace SoftwareAPIWebApp.Controllers
 
             return CreatedAtAction(nameof(GetSoftware), new { id = software.SoftwareId }, software);
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSoftware(int id, Software software)

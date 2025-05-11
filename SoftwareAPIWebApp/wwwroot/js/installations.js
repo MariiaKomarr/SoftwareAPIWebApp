@@ -9,10 +9,14 @@ function getInstallations() {
 }
 
 function addInstallation() {
+    const studentInput = document.getElementById('add-studentId');
+    const softwareInput = document.getElementById('add-softwareId');
+    const dateInput = document.getElementById('add-date');
+
     const installation = {
-        studentId: parseInt(document.getElementById('add-studentId').value),
-        softwareId: parseInt(document.getElementById('add-softwareId').value),
-        date: document.getElementById('add-date').value
+        studentId: parseInt(studentInput.value),
+        softwareId: parseInt(softwareInput.value),
+        date: dateInput.value
     };
 
     fetch(installationUri, {
@@ -20,9 +24,26 @@ function addInstallation() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(installation)
     })
-        .then(() => getInstallations())
-        .catch(error => console.error('Unable to add installation.', error));
+        .then(response => {
+            if (response.ok) {
+                getInstallations();
+
+                // Очистити поля
+                studentInput.value = '';
+                softwareInput.value = '';
+                dateInput.value = '';
+
+                alert('Installation added successfully.');
+            } else {
+                alert('Failed to add installation.');
+            }
+        })
+        .catch(error => {
+            console.error('Error while adding installation:', error);
+            alert('An error occurred while adding the installation.');
+        });
 }
+
 
 function deleteInstallation(id) {
     fetch(`${installationUri}/${id}`, {

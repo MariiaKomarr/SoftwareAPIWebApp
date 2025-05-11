@@ -1,5 +1,6 @@
 ﻿const softwareUri = '/api/softwares';
 let softwares = [];
+
 function getSoftwares() {
     fetch(softwareUri)
         .then(response => response.json())
@@ -8,14 +9,23 @@ function getSoftwares() {
 }
 
 function addSoftware() {
+    const nameInput = document.getElementById('add-name');
+    const versionInput = document.getElementById('add-version');
+    const typeIdInput = document.getElementById('add-typeId');
+    const authorInput = document.getElementById('add-author');
+    const usageTermsInput = document.getElementById('add-usageTerms');
+    const dateInput = document.getElementById('add-dateAdded');
+    const annotationInput = document.getElementById('add-annotation');
+    const errorMessagesDiv = document.getElementById('error-messages');
+
     const software = {
-        name: document.getElementById('add-name').value.trim(),
-        version: document.getElementById('add-version').value.trim(),
-        typeId: parseInt(document.getElementById('add-typeId').value),
-        author: document.getElementById('add-author').value.trim(),
-        usageTerms: document.getElementById('add-usageTerms').value.trim(),
-        dateAdded: document.getElementById('add-dateAdded').value,
-        annotation: document.getElementById('add-annotation').value.trim()
+        name: nameInput.value.trim(),
+        version: versionInput.value.trim(),
+        typeId: parseInt(typeIdInput.value),
+        author: authorInput.value.trim(),
+        usageTerms: usageTermsInput.value.trim(),
+        dateAdded: dateInput.value,
+        annotation: annotationInput.value.trim()
     };
 
     fetch(softwareUri, {
@@ -23,8 +33,34 @@ function addSoftware() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(software)
     })
-        .then(() => getSoftwares())
-        .catch(error => console.error('Unable to add software.', error));
+        .then(async response => {
+            if (response.ok) {
+                getSoftwares();
+                nameInput.value = '';
+                versionInput.value = '';
+                typeIdInput.value = '';
+                authorInput.value = '';
+                usageTermsInput.value = '';
+                dateInput.value = '';
+                annotationInput.value = '';
+                errorMessagesDiv.innerHTML = '';
+                alert('Software added successfully.');
+            } else {
+                const errorData = await response.json();
+                const errors = errorData.errors || errorData;
+                const errorList = Object.values(errors).flat();
+
+                errorMessagesDiv.innerHTML = '<ul>' +
+                    errorList.map(err => `<li>${err}</li>`).join('') +
+                    '</ul>';
+
+                alert('Failed to add software.');
+            }
+        })
+        .catch(error => {
+            console.error('Error while adding software:', error);
+            alert('An error occurred while adding the software.');
+        });
 }
 
 function deleteSoftware(id) {
@@ -83,11 +119,12 @@ function displaySoftwares(data) {
 
     data.forEach(s => {
         let row = tBody.insertRow();
-        row.insertCell(0).innerText = s.name;
-        row.insertCell(1).innerText = s.version;
-        row.insertCell(2).innerText = s.typeId;
-        row.insertCell(3).innerText = s.author;
-        row.insertCell(4).innerText = new Date(s.dateAdded).toLocaleString();
+        row.insertCell(0).innerText = s.softwareId;
+        row.insertCell(1).innerText = s.name;
+        row.insertCell(2).innerText = s.version;
+        row.insertCell(3).innerText = s.typeId;
+        row.insertCell(4).innerText = s.author;
+        row.insertCell(5).innerText = new Date(s.dateAdded).toLocaleString();
 
         let editBtn = document.createElement('button');
         editBtn.textContent = 'Edit';
@@ -97,13 +134,8 @@ function displaySoftwares(data) {
         deleteBtn.textContent = 'Delete';
         deleteBtn.onclick = () => deleteSoftware(s.softwareId);
 
-        let installButton = document.createElement('button');
-        installButton.textContent = 'Install';
-        installButton.onclick = () => installSoftware(software.softwareId);
-
-        row.insertCell(5).appendChild(editBtn);
-        row.insertCell(6).appendChild(deleteBtn);
-        row.insertCell(7).appendChild(installButton);
+        row.insertCell(6).appendChild(editBtn);
+        row.insertCell(7).appendChild(deleteBtn);
     });
 }
 

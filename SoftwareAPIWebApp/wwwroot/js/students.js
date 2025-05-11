@@ -9,10 +9,14 @@ function getStudents() {
 }
 
 function addStudent() {
+    const nameInput = document.getElementById('add-name');
+    const emailInput = document.getElementById('add-email');
+    const facultyInput = document.getElementById('add-facultyId');
+
     const student = {
-        name: document.getElementById('add-name').value.trim(),
-        email: document.getElementById('add-email').value.trim(),
-        facultyId: parseInt(document.getElementById('add-facultyId').value)
+        name: nameInput.value.trim(),
+        email: emailInput.value.trim(),
+        facultyId: parseInt(facultyInput.value)
     };
 
     fetch(studentUri, {
@@ -20,9 +24,26 @@ function addStudent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(student)
     })
-        .then(() => getStudents())
-        .catch(error => console.error('Unable to add student.', error));
+        .then(response => {
+            if (response.ok) {
+                getStudents();
+
+                // Очистити поля
+                nameInput.value = '';
+                emailInput.value = '';
+                facultyInput.value = '';
+
+                alert('Student added successfully.');
+            } else {
+                alert('Failed to add student.');
+            }
+        })
+        .catch(error => {
+            console.error('Error while adding student:', error);
+            alert('An error occurred while adding the student.');
+        });
 }
+
 
 function deleteStudent(id) {
     fetch(`${studentUri}/${id}`, {
@@ -72,9 +93,10 @@ function displayStudents(data) {
 
     data.forEach(s => {
         let row = tBody.insertRow();
-        row.insertCell(0).innerText = s.name;
-        row.insertCell(1).innerText = s.email;
-        row.insertCell(2).innerText = s.faculty?.name || s.facultyId;
+        row.insertCell(0).innerText = s.studentId;
+        row.insertCell(1).innerText = s.name;
+        row.insertCell(2).innerText = s.email;
+        row.insertCell(3).innerText = s.faculty?.name || s.facultyId;
 
         let editBtn = document.createElement('button');
         editBtn.textContent = 'Edit';
@@ -84,7 +106,7 @@ function displayStudents(data) {
         deleteBtn.textContent = 'Delete';
         deleteBtn.onclick = () => deleteStudent(s.studentId);
 
-        row.insertCell(3).appendChild(editBtn);
-        row.insertCell(4).appendChild(deleteBtn);
+        row.insertCell(4).appendChild(editBtn);
+        row.insertCell(5).appendChild(deleteBtn);
     });
 }

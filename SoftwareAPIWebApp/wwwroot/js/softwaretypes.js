@@ -9,9 +9,12 @@ function getSoftwareTypes() {
 }
 
 function addSoftwareType() {
+    const nameInput = document.getElementById('add-name');
+    const descInput = document.getElementById('add-description');
+
     const softwareType = {
-        name: document.getElementById('add-name').value.trim(),
-        description: document.getElementById('add-description').value.trim()
+        name: nameInput.value.trim(),
+        description: descInput.value.trim()
     };
 
     fetch(typeUri, {
@@ -19,9 +22,22 @@ function addSoftwareType() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(softwareType)
     })
-        .then(() => getSoftwareTypes())
-        .catch(error => console.error('Unable to add software type.', error));
+        .then(response => {
+            if (response.ok) {
+                getSoftwareTypes();
+                nameInput.value = '';
+                descInput.value = '';
+                alert('Software type added successfully.');
+            } else {
+                alert('Failed to add software type.');
+            }
+        })
+        .catch(error => {
+            console.error('Error while adding software type:', error);
+            alert('An error occurred while adding the software type.');
+        });
 }
+
 
 function deleteSoftwareType(id) {
     fetch(`${typeUri}/${id}`, {
@@ -69,8 +85,9 @@ function displaySoftwareTypes(data) {
 
     data.forEach(t => {
         let row = tBody.insertRow();
-        row.insertCell(0).innerText = t.name;
-        row.insertCell(1).innerText = t.description;
+        row.insertCell(0).innerText = t.typeId;
+        row.insertCell(1).innerText = t.name;
+        row.insertCell(2).innerText = t.description;
 
         let editBtn = document.createElement('button');
         editBtn.textContent = 'Edit';
@@ -80,7 +97,7 @@ function displaySoftwareTypes(data) {
         deleteBtn.textContent = 'Delete';
         deleteBtn.onclick = () => deleteSoftwareType(t.typeId);
 
-        row.insertCell(2).appendChild(editBtn);
-        row.insertCell(3).appendChild(deleteBtn);
+        row.insertCell(3).appendChild(editBtn);
+        row.insertCell(4).appendChild(deleteBtn);
     });
 }

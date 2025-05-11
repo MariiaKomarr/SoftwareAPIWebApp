@@ -20,7 +20,9 @@ namespace SoftwareAPIWebApp.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Faculty>>> GetFaculties()
         {
-            return await _context.Faculties.ToListAsync();
+            return await _context.Faculties
+                .Include(f => f.Students) 
+                .ToListAsync();
         }
 
         // GET: api/Faculties/5

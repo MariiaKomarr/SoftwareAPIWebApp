@@ -6,19 +6,21 @@
     <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
-<nav>
-    <a href="softwares.html">Softwares</a>
-    <a href="students.html">Students</a>
-    <a href="installations.html">Installations</a>
-    <a href="softwaretypes.html">Software Types</a>
-</nav>
+    <nav>
+        <a href="softwares.html">Softwares</a>
+        <a href="students.html">Students</a>
+        <a href="installations.html">Installations</a>
+        <a href="softwaretypes.html">Software Types</a>
+        <a href="faculties.html">Faculties</a>
+    </nav>
 
 <h1>Software Types</h1>
-<div id="softwaretypes-section">
+
+<section class="form-section">
     <form onsubmit="addSoftwareType(); return false;">
         <input type="text" id="add-name" placeholder="Name" required>
         <input type="text" id="add-description" placeholder="Description" required>
-        <input type="submit" value="Add">
+        <input type="submit" value="Add" class="btn btn-success">
     </form>
 
     <div id="editForm" style="display:none;">
@@ -27,14 +29,17 @@
             <input type="hidden" id="edit-id">
             <input type="text" id="edit-name" required>
             <input type="text" id="edit-description" required>
-            <input type="submit" value="Save">
-            <a onclick="closeInput()" aria-label="Close">&#10006;</a>
+            <input type="submit" value="Save" class="btn btn-primary">
+            <button type="button" onclick="closeInput()" class="btn btn-secondary">Cancel</button>
         </form>
     </div>
+</section>
 
+<section class="table-section">
     <table>
         <thead>
         <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Description</th>
             <th colspan="2">Actions</th>
@@ -42,7 +47,7 @@
         </thead>
         <tbody id="softwaretypes"></tbody>
     </table>
-</div>
+</section>
 
 <script src="/js/softwaretypes.js"></script>
 <script>
