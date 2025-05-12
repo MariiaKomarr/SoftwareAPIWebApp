@@ -16,7 +16,7 @@ function addInstallation() {
     const installation = {
         studentId: parseInt(studentInput.value),
         softwareId: parseInt(softwareInput.value),
-        date: dateInput.value
+        installDate: dateInput.value
     };
 
     fetch(installationUri, {
@@ -27,12 +27,9 @@ function addInstallation() {
         .then(response => {
             if (response.ok) {
                 getInstallations();
-
-                // Очистити поля
                 studentInput.value = '';
                 softwareInput.value = '';
                 dateInput.value = '';
-
                 alert('Installation added successfully.');
             } else {
                 alert('Failed to add installation.');
@@ -43,7 +40,6 @@ function addInstallation() {
             alert('An error occurred while adding the installation.');
         });
 }
-
 
 function deleteInstallation(id) {
     fetch(`${installationUri}/${id}`, {
@@ -58,7 +54,7 @@ function displayEditForm(id) {
     document.getElementById('edit-id').value = inst.installId;
     document.getElementById('edit-studentId').value = inst.studentId;
     document.getElementById('edit-softwareId').value = inst.softwareId;
-    document.getElementById('edit-date').value = inst.date;
+    document.getElementById('edit-date').value = inst.installDate;
     document.getElementById('editForm').style.display = 'block';
 }
 
@@ -68,7 +64,7 @@ function updateInstallation() {
         installId: parseInt(id),
         studentId: parseInt(document.getElementById('edit-studentId').value),
         softwareId: parseInt(document.getElementById('edit-softwareId').value),
-        date: document.getElementById('edit-date').value
+        installDate: document.getElementById('edit-date').value
     };
 
     fetch(`${installationUri}/${id}`, {
@@ -95,7 +91,10 @@ function displayInstallations(data) {
         let row = tBody.insertRow();
         row.insertCell(0).innerText = i.student?.name || i.studentId;
         row.insertCell(1).innerText = i.software?.name || i.softwareId;
-        row.insertCell(2).innerText = new Date(i.date).toLocaleString();
+
+        const parsedDate = Date.parse(i.installDate);
+        const displayDate = isNaN(parsedDate) ? 'Invalid Date' : new Date(parsedDate).toLocaleString();
+        row.insertCell(2).innerText = displayDate;
 
         let editBtn = document.createElement('button');
         editBtn.textContent = 'Edit';
